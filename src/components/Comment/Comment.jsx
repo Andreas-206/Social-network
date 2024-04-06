@@ -1,9 +1,10 @@
-import React from 'react';
-import styles from './Comment.module.css';
-import PropTypes from 'prop-types';
-import { TiThumbsUp, TiThumbsDown } from 'react-icons/ti';
-import { formatDateToNow } from '../../helpers/formatDateToNow';
-import { Button } from '../Button/Button';
+import React from "react";
+import styles from "./Comment.module.css";
+import PropTypes from "prop-types";
+import { TiThumbsUp, TiThumbsDown } from "react-icons/ti";
+import { formatDateToNow } from "../../helpers/formatDateToNow";
+import { Button } from "../Button/Button";
+import { usePutCommentMutation } from "../../redux/commentApi";
 
 export const Comment = ({
   createdAt,
@@ -14,6 +15,19 @@ export const Comment = ({
   thumbsDown,
   id,
 }) => {
+  const [putComment] = usePutCommentMutation();
+  const handleLikes = (thunmbs) => {
+    putComment({
+      createdAt,
+      content,
+      author,
+      avatar,
+      thumbsUp,
+      thumbsDown,
+      id,
+      ...thunmbs,
+    });
+  };
   return (
     <li className={styles.card}>
       <img className={styles.avatar} src={avatar} alt={author} />
@@ -31,11 +45,16 @@ export const Comment = ({
           <span className={styles.date}>{formatDateToNow(createdAt)}</span>
 
           <div className={styles.buttonBox}>
-            <Button counter={thumbsUp} id={id}>
+            <Button counter={thumbsUp} id={id} onLikes={handleLikes}>
               <TiThumbsUp className={styles.icon} />
             </Button>
 
-            <Button counter={thumbsDown} role='thumbsDown' id={id}>
+            <Button
+              counter={thumbsDown}
+              role="thumbsDown"
+              id={id}
+              onLikes={handleLikes}
+            >
               <TiThumbsDown className={styles.icon} />
             </Button>
           </div>

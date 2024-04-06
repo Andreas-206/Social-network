@@ -1,4 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { data } from "autoprefixer";
 
 const API_ENDPOINT = "/comments";
 const BASE_URL = "https://65f6b8a641d90c1c5e0b3247.mockapi.io/api";
@@ -22,10 +23,18 @@ export const commentApi = createApi({
       }),
       invalidatesTags: ["Comments"],
     }),
+     putComment: builder.mutation({
+      query: ({id, ...data}) => ({
+        url: `${API_ENDPOINT}/${id}`,
+        method: 'PUT',
+        body:data,
+      }),
+      invalidatesTags: ['Comments'],
+    }),
   }),
 });
 
-export const { useGetCommentsQuery, useAddCommentMutation } = commentApi;
+export const { useGetCommentsQuery, useAddCommentMutation, usePutCommentMutation } = commentApi;
 
 // import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 

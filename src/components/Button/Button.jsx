@@ -1,22 +1,32 @@
-import classNames from 'classnames';
-import PropTypes from 'prop-types';
-import React from 'react';
-import styles from './Button.module.css';
+import classNames from "classnames";
+import PropTypes from "prop-types";
+import React from "react";
+import styles from "./Button.module.css";
+import { usePutCommentMutation } from "../../redux/commentApi";
 
-export const Button = ({ children, counter, role = 'thumbsUp', id }) => {
+export const Button = ({
+  children,
+  counter,
+  role = "thumbsUp",
+  id,
+  onLikes,
+}) => {
   const variants = {
-    [styles.thumbsUp]: role === 'thumbsUp',
-    [styles.thumbsDown]: role === 'thumbsDown',
+    [styles.thumbsUp]: role === "thumbsUp",
+    [styles.thumbsDown]: role === "thumbsDown",
   };
+  const [putComment, { isLoading }] = usePutCommentMutation();
 
   const onBtnHandleClick = () => {
-    console.log('click');
+    // onLikes({ [role]: counter + 1 });
+    putComment({ id, [role]: counter + 1 });
+    console.log("click");
   };
 
   return (
     <button
       className={classNames(styles.button, variants)}
-      type='button'
+      type="button"
       counter={counter}
       onClick={onBtnHandleClick}
       id={id}
@@ -24,8 +34,7 @@ export const Button = ({ children, counter, role = 'thumbsUp', id }) => {
       {children}
 
       <span className={styles.counter}>
-        <span></span>
-        {counter}
+        {isLoading ? <span>...</span> : counter}
       </span>
     </button>
   );
